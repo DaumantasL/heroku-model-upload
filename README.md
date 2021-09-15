@@ -27,7 +27,9 @@ resp.text
 
 ## Data inputs
 
-Webapp takes json as data input. A dictionary is used to construct it. The string "inputs" is necessary as the dictionary key. The dictionary value is a list (any length) of lists (13 items exactly) of float values.
+Webapp takes json as data input. A dictionary is used to construct the json.
+
+The necessary dictionary key is specific and needs to be "inputs". The dictionary value is a list (any length) of lists (13 items exactly) of float values.
 
 ```
 from sklearn.datasets import load_boston
@@ -38,7 +40,7 @@ data = data[:batchsize].tolist()
 data = {'inputs': testdata}
 ```
  
- ## Prediction
+## Prediction
 
 Use the https://turing-model-deploy.herokuapp.com/predict url and correctly formatted Data inputs (see above), receive a response in json of the form 
 
