@@ -29,21 +29,21 @@ resp.text
 
 Webapp takes json as data input. A dictionary is used to construct it. The string "inputs" is necessary as the dictionary key. The dictionary value is a list (any length) of lists (13 items exactly) of float values.
 
- ```
+```
 from sklearn.datasets import load_boston
 import numpy as np
 data = load_boston().data
 batchsize = 20
 data = data[:batchsize].tolist()
 data = {'inputs': testdata}
- ```
- 
+```
  
  ## Prediction
- 
-import requests
-import json
-api_url = 'https://turing-model-deploy.herokuapp.com/validation'
-resp = requests.get(api_url, data=json.dumps(testdata))
-resp.text 
- 
+
+Use the https://turing-model-deploy.herokuapp.com/predict url and correctly formatted Data inputs (see above), receive a response in json of the form 
+
+```
+api_url = 'https://turing-model-deploy.herokuapp.com/predict'
+resp = requests.post(api_url, data=json.dumps(testdata))
+resp.json()
+```
