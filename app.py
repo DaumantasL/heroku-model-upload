@@ -1,6 +1,4 @@
-import requests
 from flask import Flask, request
-from werkzeug.wrappers import Request, Response
 import json
 import numpy as np
 import pickle
@@ -27,19 +25,23 @@ def __process_input(request_data: str) -> np.array:
     assert parsed_body.shape[-1] == 13
     return parsed_body
 
+@app.route("/validation", methods=["GET"]) 
+def validation() -> str:
+    if model_valid == True:
+        return json.dumps({"validation": "Model upload works as expected."}), 200
+    else:
+        return json.dumps({"error": "Model upload does not work as expected."}), 400
+
 @app.route("/predict", methods=["POST"])
 def predict() -> str:
-    if model_valid == False:
-        return json.dumps({"error": "Model validation failed."}), 400
-    else:
-        try:
-            input_params = __process_input(request.data)
-            predictions = model.predict(input_params)
-            return json.dumps({"predicted_prices": predictions.tolist()}), 200
-        except (KeyError, json.JSONDecodeError, AssertionError):
-            return json.dumps({"error": "CHECK INPUT"}), 400
-        except:
-            return json.dumps({"error": "PREDICTION FAILED"}), 500
+    try:
+        input_params = __process_input(request.data)
+        predictions = model.predict(input_params)
+        return json.dumps({"predicted_prices": predictions.tolist()}), 200
+    except (KeyError, json.JSONDecodeError, AssertionError):
+        return json.dumps({"error": "CHECK INPUT"}), 400
+    except:
+        return json.dumps({"error": "PREDICTION FAILED"}), 500
 
 if __name__ == '__main__':
     app.run(port = int(os.getenv('PORT')), debug=False)
