@@ -1,5 +1,5 @@
 import requests
-from flask import Flask
+from flask import Flask, request
 from werkzeug.wrappers import Request, Response
 import json
 import numpy as np
@@ -27,7 +27,6 @@ def __process_input(request_data: str) -> np.array:
     assert parsed_body.shape[-1] == 13
     return parsed_body
 
-@app.route('/', methods=['POST'])
 @app.route("/predict", methods=["POST"])
 def predict() -> str:
     if model_valid == False:
