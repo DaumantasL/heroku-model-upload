@@ -5,6 +5,7 @@ import json
 import numpy as np
 import pickle
 from sklearn.ensemble import GradientBoostingRegressor
+import os
 
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ def __process_input(request_data: str) -> np.array:
     assert parsed_body.shape[-1] == 13
     return parsed_body
 
+@app.route('/', methods=['POST'])
 @app.route("/predict", methods=["POST"])
 def predict() -> str:
     if model_valid == False:
@@ -41,5 +43,4 @@ def predict() -> str:
             return json.dumps({"error": "PREDICTION FAILED"}), 500
 
 if __name__ == '__main__':
-    app.run(port = 5000, debug=False)
-#port = int(os.getenv('PORT'))
+    app.run(port = int(os.getenv('PORT')), debug=False)
