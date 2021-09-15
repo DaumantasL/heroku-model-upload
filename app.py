@@ -22,7 +22,8 @@ model_valid = np.array_equiv(valid_y, model.predict(valid_X))
 
 def __process_input(request_data: str) -> np.array:
     parsed_body = np.asarray(json.loads(request_data)["inputs"])
-    assert len(parsed_body.shape) == 2
+    assert len(parsed_body.shape) in (1, 2)
+    assert parsed_body.shape[-1] == 13
     return parsed_body
 
 @app.route("/predict", methods=["POST"])
@@ -33,7 +34,7 @@ def predict() -> str:
         try:
             input_params = __process_input(request.data)
             predictions = model.predict(input_params)
-            return json.dumps({"predicted_prices": predictions.tolist()})
+            return json.dumps({"predicted_prices": predictions.tolist()}), 200
         except (KeyError, json.JSONDecodeError, AssertionError):
             return json.dumps({"error": "CHECK INPUT"}), 400
         except:
