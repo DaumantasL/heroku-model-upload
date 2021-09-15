@@ -19,11 +19,16 @@ valid_y = pickle.load(open("models/valid_y.pkl", "rb"))
 
 model_valid = np.array_equiv(valid_y, model.predict(valid_X))
 
+
 def __process_input(request_data: str) -> np.array:
     parsed_body = np.asarray(json.loads(request_data)["inputs"])
     assert len(parsed_body.shape) in (1, 2)
     assert parsed_body.shape[-1] == 13
-    return parsed_body
+    if len(parsed_body.shape) == 1:
+        return parsed_body.reshape(1, -1)
+    else:
+        return parsed_body
+
 
 @app.route("/validation", methods=["GET"]) 
 def validation() -> str:
@@ -31,6 +36,7 @@ def validation() -> str:
         return json.dumps({"validation": "Model upload works as expected."}), 200
     else:
         return json.dumps({"error": "Model upload does not work as expected."}), 400
+
 
 @app.route("/predict", methods=["POST"])
 def predict() -> str:
@@ -42,6 +48,7 @@ def predict() -> str:
         return json.dumps({"error": "CHECK INPUT"}), 400
     except:
         return json.dumps({"error": "PREDICTION FAILED"}), 500
+        
 
 if __name__ == '__main__':
     app.run(port = int(os.getenv('PORT')), debug=False)
