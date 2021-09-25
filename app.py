@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 
-model_filename="models/houses_model.pkl"
+model_filename = "models/houses_model.pkl"
 with open(model_filename, 'wb') as handle:
     model = pickle.load(handle)
 
@@ -23,7 +23,7 @@ model_valid = np.array_equiv(valid_y, model.predict(valid_X))
 
 
 def __process_input(request_data: str) -> np.array:
-    '''Changes input list into an numpy array'''
+    '''Changes input list into an numpy array.'''
     parsed_body = np.asarray(json.loads(request_data)["inputs"])
     assert len(parsed_body.shape) in (1, 2)
     assert parsed_body.shape[-1] == 13
@@ -35,15 +35,16 @@ def __process_input(request_data: str) -> np.array:
 
 @app.route("/validation", methods=["GET"]) 
 def validation() -> str:
-    ''''''
-    if model_valid == True:
-        return json.dumps({"validation": "Model upload works as expected."}), 200
+    '''Checks if deployed model makes the same prediction as in training environment.'''
+    if model_valid is True:
+        return json.dumps({"validation": "Model deployment works as expected."}), 200
     else:
-        return json.dumps({"error": "Model upload does not work as expected."}), 400
+        return json.dumps({"error": "Model deployment does not work as expected."}), 400
 
 
 @app.route("/predict", methods=["POST"])
 def predict() -> str:
+    '''Returns house price predictions in a json format.'''
     try:
         input_params = __process_input(request.data)
         predictions = model.predict(input_params)
@@ -55,4 +56,4 @@ def predict() -> str:
         
 
 if __name__ == '__main__':
-    app.run(port = int(os.getenv('PORT')), debug=False)
+    app.run(port=int(os.getenv('PORT')), debug=False)
