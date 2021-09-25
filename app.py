@@ -7,17 +7,20 @@ import os
 
 app = Flask(__name__)
 
-model_filename = "models/houses_model.pkl"
-with open(model_filename, 'wb') as modelhandle:
-    model = pickle.load(modelhandle)
+model_filename="models/houses_model.pkl"
+modelfile = open(model_filename, "rb")
+model = pickle.load(modelfile)
+modelfile.close()
 
 valid_data_filename = "models/valid_X.pkl"
-with open(valid_data_filename, 'wb') as valid_X_handle:
-    valid_X = pickle.load(valid_X_handle)
+valid_Xfile = open(valid_data_filename, "rb")
+valid_X = pickle.load(valid_Xfile)
+valid_Xfile.close()
 
 valid_predict_filename = "models/valid_y.pkl"
-with open(valid_predict_filename, 'wb') as valid_y_handle:
-    valid_y = pickle.load(valid_y_handle)
+valid_yfile = open(valid_predict_filename, "rb")
+valid_y = pickle.load(valid_yfile)
+valid_yfile.close()
 
 model_valid = np.array_equiv(valid_y, model.predict(valid_X))
 
