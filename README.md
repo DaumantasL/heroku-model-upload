@@ -30,7 +30,6 @@ POST request to https://turing-model-deploy.herokuapp.com/predict outputs JSON i
 
 ```
 {'predicted_prices': [21.69999930887597]}
-
 ```
 
 
